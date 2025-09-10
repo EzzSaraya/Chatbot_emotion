@@ -42,5 +42,39 @@ What you’ll see:
 
 ---
 
-## 📁 Project structure
 
+# 🧰 **LangChain usage**
+
+EmpathyBot uses LangChain to glue together the RAG pipeline and generation in a clean, modular way:
+
+**Embeddings**: HuggingFaceEmbeddings to turn templates into vectors.
+
+**Vector store**: FAISS (via langchain_community.vectorstores) to store/search the template corpus with metadata (e.g., emotion).
+
+**Retriever** : we query FAISS with an emotion filter and simple topic checks to get candidates.
+
+**Prompting**: a few-shot PromptTemplate frames the reply in 1–2 sentences.
+
+**LLM wrapper** : HuggingFacePipeline wraps FLAN-T5 so we can call .invoke() consistently from LangChain.
+
+
+---
+
+## 📁 Project structure
+Chatbot_emotion/
+├─ Data/
+│ ├─ corpus.json
+│ ├─ corpus_clean.json
+│ ├─ faiss.index
+│ ├─ faiss_meta.pkl
+│ ├─ tweet_eval_emotion_clean.csv
+│ └─ tweet_eval_emotion_clean.parquet
+├─ python_files/
+│ ├─ empathybot_sprint_py.py
+│ ├─ server.py
+│ └─ streamlit_app.py
+├─ requirements.txt
+└─ README.md
+
+
+Author : **Ezz Eldin Saraya**
