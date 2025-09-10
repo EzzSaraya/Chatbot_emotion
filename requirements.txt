@@ -1,0 +1,9 @@
+streamlit==1.37.1
+torch>=2.0
+transformers>=4.43
+accelerate>=0.32.0
+sentence-transformers>=3.0.1
+langchain>=0.2.9
+langchain-community>=0.2.7
+faiss-cpu>=1.8.0
+pandas>=2.2.2
