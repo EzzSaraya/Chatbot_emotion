@@ -4,10 +4,23 @@ EmpathyBot detects the user's **emotion**, retrieves **empathetic response templ
 
 >
 >   
-> Emotion detector → FAISS retrieval (MiniLM) → FLAN-T5 few-shot reply → safety disclaimer.  
+> Emotion detector → FAISS retrieval (MiniLM) →  few-shot reply → safety disclaimer.  
 > One-click web UI via Streamlit; public URL via ngrok.
 
----
+
+
+## 🎬 Want to watch a Demo?
+
+Click to watch (2–5 min walkthrough):
+
+**👉 [Watch the demo on Google Drive](https://drive.google.com/file/d/1Y9mNihtPWmcDMREB7tuegfeUZ2OxJflj/view?usp=sharing)**
+
+What you’ll see:
+- Emotion detection badge + confidence
+- Top-3 retrieved templates (transparent RAG)
+- Tone switcher (warm / concise / practical / celebratory)
+- Safety disclaimer in every reply
+- Feedback logging (👍 / 👎)
 
 ## ✨ Features
 
