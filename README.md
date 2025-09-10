@@ -25,7 +25,7 @@ What you’ll see:
 ## ✨ Features
 
 - **Emotion detection** (e.g., joy/sadness/anger → mapped to 4 buckets)
-- **RAG retrieval** using FAISS + MiniLM embeddings
+- **Advanced RAG retrieval** using FAISS + MiniLM embeddings
 - **Few-shot generation**  with anti-repetition + post-processing
 - **Safety layer**: neutral fallback when low confidence; crisis/profanity filtering; disclaimer
 - **Streamlit app** with tone control, template inspection, and feedback logging
