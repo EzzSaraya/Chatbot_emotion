@@ -7,7 +7,7 @@ It ships with a clean **Streamlit UI**, supports **voice input (speech-to-text)*
 > **Input:** Type in the box **or** click the mic to speak (Whisper STT)
 
 ---
-![EmpathyBot UI — single online mic & emotion badges](assets/empathybot-hero.png)
+![EmpathyBot UI — single online mic & emotion badges](Data/demo_ss.png)
 
 
 ## 🎬 Demo
