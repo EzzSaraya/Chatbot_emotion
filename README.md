@@ -1,64 +1,75 @@
-# 🤝 EmpathyBot — Emotion-Aware RAG with Few-Shot Prompting
+# 🤝 EmpathyBot — Emotion-Aware RAG with Few-Shot Prompting (Text + Voice)
 
-EmpathyBot detects the user's **emotion**, retrieves **empathetic response templates** with RAG, and composes a natural reply via a **few-shot LLM**. It ships with a clean **Streamlit UI**, supports **ngrok** for quick sharing, and includes safety guardrails (neutral fallback, crisis filters, disclaimer).
+EmpathyBot detects a user’s **emotion**, retrieves **empathetic response templates** with RAG, and composes a natural reply via a **few-shot LLM**.  
+It ships with a clean **Streamlit UI**, supports **voice input (speech-to-text)** via a single inline mic, and includes safety guardrails (neutral fallback, crisis filters, disclaimer). For easy sharing, it works with **ngrok** or **Cloudflare** tunnels.
 
->
->   
-> Emotion detector → FAISS retrieval (MiniLM) →  few-shot reply → safety disclaimer.  
-> One-click web UI via Streamlit; public URL via ngrok.
+> **Pipeline:** Emotion detector → FAISS retrieval (MiniLM) → Few-shot reply → Safety disclaimer  
+> **Input:** Type in the box **or** click the mic to speak (Whisper STT)
+
+---
+![EmpathyBot UI — single online mic & emotion badges](assets/empathybot-hero.png)
 
 
-
-## 🎬 Want to watch a Demo?
-
-Click to watch (2–5 min walkthrough):
-
-**👉 [Watch the demo on Google Drive](https://drive.google.com/file/d/1Y9mNihtPWmcDMREB7tuegfeUZ2OxJflj/view?usp=sharing)**
+## 🎬 Demo
+**👉 [Watch the demo on Google Drive](https://drive.google.com/file/d/1u-yY6Cl6LbNom7zlt4zYr2L4I9eaTksi/view?usp=drive_link)**
 
 What you’ll see:
-- Emotion detection badge + confidence
+- Emotion badge + confidence
 - Top-3 retrieved templates (transparent RAG)
 - Tone switcher (warm / concise / practical / celebratory)
+- **Text + Voice input** (single mic next to “Send”)
 - Safety disclaimer in every reply
 - Feedback logging (👍 / 👎)
 
+---
+
 ## ✨ Features
-
-- **Emotion detection** (e.g., joy/sadness/anger → mapped to 4 buckets)
-- **Advanced RAG retrieval** using FAISS + MiniLM embeddings
-- **Few-shot generation**  with anti-repetition + post-processing
-- **Safety layer**: neutral fallback when low confidence; crisis/profanity filtering; disclaimer
-- **Streamlit app** with tone control, template inspection, and feedback logging
-- **ngrok integration** for quick secure sharing (Colab-friendly)
-
----
-
-## 🧩 How it works
-
-1. **Detect** emotion for the user message and map to one of: `happiness | sadness | anger | neutral`.
-2. **Retrieve** top templates aligned with that emotion using FAISS (with on-topic filtering).
-3. **Compose** a short, supportive reply using a few-shot prompt (FLAN-T5).
-4. **Guardrails**: post-process to remove meta/instructions and append a disclaimer.
+- **Text *and* Voice input**
+  - Inline mic beside **Send** (no extra bar); click to record, click again to stop.
+  - **Whisper** converts speech → text and auto-fills the input.
+- **Emotion detection** → 4 buckets: `happiness | sadness | anger | neutral`
+- **Advanced RAG retrieval** using **FAISS** + **MiniLM** embeddings with emotion filtering
+- **Few-shot generation** (FLAN-T5) with post-processing to avoid repetition/parroting
+- **Safety layer**: neutral fallback on low confidence; crisis/profanity screening; disclaimer
+- **Streamlit UI**: per-emotion color badges, template inspection, tone control, feedback logging
+- **Colab-friendly sharing**: ngrok or Cloudflare tunnel
 
 ---
 
-
-# 🧰 **LangChain usage**
-
-EmpathyBot uses LangChain to glue together the RAG pipeline and generation in a clean, modular way:
-
-**Embeddings**: HuggingFaceEmbeddings to turn templates into vectors.
-
-**Vector store**: FAISS (via langchain_community.vectorstores) to store/search the template corpus with metadata (e.g., emotion).
-
-**Retriever** : we query FAISS with an emotion filter and simple topic checks to get candidates.
-
-**Prompting**: a few-shot PromptTemplate frames the reply in 1–2 sentences.
-
-**LLM wrapper** : HuggingFacePipeline wraps FLAN-T5 so we can call .invoke() consistently from LangChain.
-
+## 🧠 Models Used
+- **Emotion Detector:** `bhadresh-savani/distilbert-base-uncased-emotion`  
+  DistilBERT fine-tuned for granular emotions (joy/sadness/anger/etc.).
+- **RAG Embeddings:** `sentence-transformers/all-MiniLM-L6-v2`  
+  Lightweight (384-d) and fast for template retrieval.
+- **Generator (Few-Shot):** `google/flan-t5-base`  
+  Instruction-tuned; produces concise, polite replies (wrapped with LangChain `HuggingFacePipeline`).
+- **Speech-to-Text:** **OpenAI Whisper** (`base` by default)  
+  Robust multilingual STT (requires `ffmpeg`). Configure size via `WHISPER_SIZE=tiny|base|small|medium|large`.
+- **Vector Store:** **FAISS**  
+  In-memory similarity search with persisted index files.
 
 ---
+
+## 🧩 How It Works
+1. **Detect** emotion for the message (or transcript), map to `happiness|sadness|anger|neutral`.
+2. **Retrieve** top templates aligned with that emotion (FAISS + MiniLM + metadata filter).
+3. **Compose** a 1–2 sentence empathetic reply via a few-shot prompt (FLAN-T5).
+4. **Guardrails**: dedup & cleanup; neutral fallback if confidence is low; append a safety disclaimer.
+
+---
+
+## 🧰 LangChain Usage
+- **Embeddings:** `HuggingFaceEmbeddings` (MiniLM)  
+- **Vector store:** `langchain_community.vectorstores.FAISS` (+ emotion metadata)  
+- **Retriever:** similarity search (optional MMR variant available)  
+- **Prompting:** compact few-shot `PromptTemplate` (tone-aware)  
+- **LLM wrapper:** `HuggingFacePipeline` for `.invoke()` API
+
+---
+
+
+
+
 
 ## 📁 Project structure
 Chatbot_emotion/
@@ -70,6 +81,9 @@ Chatbot_emotion/
 │ ├─ tweet_eval_emotion_clean.csv
 │ └─ tweet_eval_emotion_clean.parquet
 ├─ python_files/
+│ ├─ voice/
+│   ├─ voice_utils.py 
+│    └─ ui_utils.py 
 │ ├─ empathybot_sprint_py.py
 │ ├─ server.py
 │ └─ streamlit_app.py
